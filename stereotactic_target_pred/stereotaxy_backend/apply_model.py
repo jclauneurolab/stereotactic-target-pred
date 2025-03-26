@@ -2,21 +2,20 @@ import os
 import pickle
 import warnings
 from pathlib import Path
+import yaml
 
 import numpy as np
 import pandas as pd
 from sklearn.decomposition import PCA
 from sklearn.linear_model import Ridge
 from sklearn.preprocessing import StandardScaler
-from utils import (
+from stereotactic_target_pred.stereotaxy_backend.utils import (
     dftodfml,
     fids_to_fcsv,
     make_zero,
     mcp_origin,
     transform_afids,
 )
-
-import configfile from '../config/config.yml'
 
 # Suppress specific warnings after all imports
 warnings.filterwarnings("ignore", category=UserWarning, module="sklearn")
@@ -242,18 +241,4 @@ def model_pred(
     stncoords[1, :] = stn_l_native[:3]
 
     # Save the native-space coordinates to the output file
-    # saves 3 outputs 
     fids_to_fcsv(stncoords, template_fcsv, target_native)
-
-
-model_pred(
-    input= #user input path,
-    model=config[model_selected] #in resources,
-    midpoint="PMJ",
-    template_fcsv= #in resources,
-    output = #outputs 3 files
-
-)
-
-#model_selected from a user input selection button on the frontend
-# input from a drag and drop - will be fcsv filepath 
