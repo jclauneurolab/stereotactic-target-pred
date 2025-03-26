@@ -1,0 +1,21 @@
+.container {
+  text-align: center;
+  padding: 20px;
+}
+
+.dropzone {
+  border: 2px dashed #007bff;
+  padding: 30px;
+  cursor: pointer;
+  background-color: #f9f9f9;
+  margin-bottom: 10px;
+}
+
+button {
+  padding: 10px 20px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  cursor: pointer;
+}
+
