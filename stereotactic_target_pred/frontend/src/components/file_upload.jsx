@@ -5,6 +5,7 @@ import axios from "axios";
 const FileUpload = () => {
   const [selectedModel, setSelectedModel] = useState(""); 
   const [file, setFile] = useState(null);
+  const [success, setSuccess] = useState(false);
 
   // Handle file drop
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
@@ -32,12 +33,27 @@ const FileUpload = () => {
         headers: { "Content-Type": "multipart/form-data" },
       });
       alert(`Success: ${response.data.message}`);
+      setSuccess(true);
     } catch (error) {
       alert("Upload failed!");
       console.error(error);
+      setSuccess(false);
     }
   };
 
+  const handleDownload = async () => {
+    const response = await axios.get("http://127.0.0.1:5000/download-output", {
+      responseType: "blob", // Important for file downloads
+    });
+
+    const url = window.URL.createObjectURL(new Blob([response.data]));
+    const link = document.createElement("a");
+    link.href = url;
+    link.setAttribute("download", "output.zip");
+    document.body.appendChild(link);
+    link.click();
+  }
+  
   return (
     <div className="container">
       <div {...getRootProps()} className="dropzone">
@@ -55,6 +71,9 @@ const FileUpload = () => {
       </select>
       {file && <p>Selected File: {file.name}</p>}
       <button onClick={handleSubmit}>Upload</button>
+      {success && (
+        <button onClick={handleDownload}>Download Output</button>
+      )}
     </div>
   );
 };

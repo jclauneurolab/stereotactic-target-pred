@@ -9,7 +9,7 @@ import pandas as pd
 from sklearn.decomposition import PCA
 from sklearn.linear_model import Ridge
 from sklearn.preprocessing import StandardScaler
-from stereotactic_target_pred.stereotaxy_backend.utils import (
+from utils import (
     dftodfml,
     fids_to_fcsv,
     make_zero,
@@ -155,15 +155,14 @@ def model_pred(
     -------
         None
     """
+    print("inside model pred")
     # Transform input fiducial data using the specified transformation matrix
     fcsvdf_xfm = transform_afids(in_fcsv, slicer_tfm, midpoint)
     xfm_txt = fcsvdf_xfm[1]  # Transformation matrix in array form
     df_sub = dftodfml(fcsvdf_xfm[0])[0]
-
     # Compute MCP (midpoint of the collicular plate)
     # and center the fiducials on the MCP
     df_sub_mcp, mcp = mcp_origin(df_sub)
-
     # Reflect left hemisphere fiducials onto the right hemisphere.
     # This works because the data has already been ACPC-aligned
     # and MCP-centered.
@@ -181,7 +180,6 @@ def model_pred(
     # Standardize column names for concatenation
     df_sub_mcp.columns = combined_lables
     df_sub_mcp_l.columns = combined_lables
-
     # Combine the original and mirrored dataframes into a single dataset
     df_sub_mcp = pd.concat([df_sub_mcp, df_sub_mcp_l], ignore_index=True)
 
@@ -192,19 +190,20 @@ def model_pred(
 
     df_sub_mcp.loc[:, cols_to_modify] = (
         df_sub_mcp.loc[:, cols_to_modify]
-        .applymap(make_zero)
+        .map(make_zero)
     )
 
-
     # Load the trained model components from the pickle file
-    with open(model, "rb") as file:
-        objects_dict = pickle.load(file)
+    try:
+        with open(model, "rb") as file:
+            objects_dict = pickle.load(file)
+    except Exception as e:
+        print("Error:", e)
 
     # Extract preprocessing objects and Ridge regression models
     standard_scaler = objects_dict["standard_scaler"]
     pca = objects_dict["pca"]
     ridge_inference = [objects_dict["x"], objects_dict["y"], objects_dict["z"]]
-
     # Apply standard scaling and PCA transformation to the data
     df_sub_mcp = standard_scaler.transform(df_sub_mcp.values)
     df_sub_mcp = pca.transform(df_sub_mcp)
@@ -215,7 +214,6 @@ def model_pred(
             ridge.predict(df_sub_mcp) for ridge in ridge_inference
         ]
         )
-
     # Adjust the second predicted x-coordinate to reflect the left hemisphere
     y_sub[1, 0] *= -1
 
@@ -225,7 +223,7 @@ def model_pred(
     # Convert MCP-centered coordinates to native space
     stn_r_mcp = y_sub[0, :] + mcp.ravel()
     stn_l_mcp = y_sub[1, :] + mcp.ravel()
-
+    print("here9")
     # Create vectors for right and left fiducials with homogeneous coordinates
     vecr = np.hstack([stn_r_mcp.ravel(), 1])
     vecl = np.hstack([stn_l_mcp.ravel(), 1])
@@ -234,7 +232,7 @@ def model_pred(
     # to convert coordinates to native space
     stn_r_native = np.linalg.inv(xfm_txt) @ vecr.T
     stn_l_native = np.linalg.inv(xfm_txt) @ vecl.T
-
+    print("here10")
     # Store the final native-space coordinates in a matrix
     stncoords = np.zeros((2, 3))
     stncoords[0, :] = stn_r_native[:3]

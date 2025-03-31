@@ -1,20 +1,31 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, send_file
 from flask_cors import CORS
 import os
 import yaml
 from apply_model import model_pred
+import shutil
 
 app = Flask(__name__)
-CORS(app, resources={r"/*": {"origins": "*"}})
+CORS(app)
 
-configfile = '/Users/mackenziesnyder/Desktop/stereotactic-target-pred/config/config.yaml'
+# Get the backend directory
+current_dir = os.path.dirname(os.path.abspath(__file__))
+print(current_dir)
+
+# Move up two levels to reach the project root
+root_dir = os.path.abspath(os.path.join(current_dir, "..", ".."))
+print(root_dir)
+
+# Define path to the config file
+configfile = os.path.join(root_dir, "config", "config.yaml")
+
 with open(configfile, "r") as file:
     config = yaml.safe_load(file)
 
-UPLOAD_FOLDER = "./uploads"
+UPLOAD_FOLDER = os.path.join(root_dir, "uploads")
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 
-OUTPUT_FOLDER = "./output"
+OUTPUT_FOLDER = os.path.join(root_dir, "output")
 os.makedirs(OUTPUT_FOLDER, exist_ok=True)
 
 print("starting pred")
@@ -46,33 +57,45 @@ def predict():
         # You can replace these with your actual paths and arguments
         slicer_tfm = f'{OUTPUT_FOLDER}/ACPC.txt'
         print(slicer_tfm)
-        template_fcsv = config["template_fcsv"]
+        template_fcsv = os.path.join(root_dir, config.get("template_fcsv"))
         print(template_fcsv)
         midpoint = 'PMJ'
         print(midpoint)
-        model_path = config["{model_type}"]
+        model_path = os.path.join(root_dir, config.get("STN"))
         print(model_path)
         target_mcp = f'{OUTPUT_FOLDER}/mcp.fcsv'
         print(target_mcp)
         target_native = f'{OUTPUT_FOLDER}/native.fcsv'
         print(target_native)
 
-        # Call the prediction function (model_pred)
-        zip_path = model_pred(
+        print("------------")
+        print("starting model pred")
+        print("------------")
+
+        model_pred(
             in_fcsv=file_path,
-            model_path=model_path,
+            model=model_path,
             midpoint=midpoint,
             slicer_tfm=slicer_tfm,
             template_fcsv=template_fcsv,
             target_mcp=target_mcp,
             target_native=target_native
         )
-
-        return jsonify({"message": f"Results saved at: {zip_path}"}), 200
+        return jsonify({"message": f"Model ran"}), 200
 
     except Exception as e:
         return jsonify({"message": f"Error processing the file: {str(e)}"}), 500
 
+
+@app.route("/download-output", methods=["GET"])
+def download_output():
+    output_zip_path = os.path.join(root_dir, "output.zip")
+
+    # Zip the output folder
+    shutil.make_archive(output_zip_path.replace(".zip", ""), 'zip', OUTPUT_FOLDER)
+
+    # Send the ZIP file to the frontend
+    return send_file(output_zip_path, as_attachment=True)
 
 if __name__ == "__main__":
     app.run(debug=True)
