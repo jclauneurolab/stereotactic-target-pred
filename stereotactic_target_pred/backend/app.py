@@ -22,9 +22,6 @@ with open(configfile, "r") as file:
 UPLOAD_FOLDER = os.path.join(root_dir, "uploads")
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 
-OUTPUT_FOLDER = os.path.join(root_dir, "output")
-os.makedirs(OUTPUT_FOLDER, exist_ok=True)
-
 print("starting pred")
 
 @app.route("/apply-model", methods=["POST"])
@@ -46,10 +43,14 @@ def predict():
     file_path = os.path.join(UPLOAD_FOLDER, file.filename)
     print("Saving file to:", file_path)
     file.save(file_path)
+    file_name_without_extension = os.path.splitext(os.path.basename(file.filename))[0]
+    print("no extension", file_name_without_extension)
 
+    OUTPUT_FOLDER = os.path.join(root_dir, f"{file_name_without_extension}_output")
+    os.makedirs(OUTPUT_FOLDER, exist_ok=True)
     # Run the model prediction
     try:
-        slicer_tfm = f'{OUTPUT_FOLDER}/{file.filename}_ACPC.txt'
+        slicer_tfm = f'{OUTPUT_FOLDER}/{file_name_without_extension}_ACPC.txt'
         print(slicer_tfm)
         template_fcsv = os.path.join(root_dir, config.get("template_fcsv"))
         print(template_fcsv)
@@ -57,9 +58,9 @@ def predict():
         print(midpoint)
         model_path = os.path.join(root_dir, config.get(model_type))
         print(model_path)
-        target_mcp = f'{OUTPUT_FOLDER}/{file.filename}_mcp.fcsv'
+        target_mcp = f'{OUTPUT_FOLDER}/{file_name_without_extension}_mcp.fcsv'
         print(target_mcp)
-        target_native = f'{OUTPUT_FOLDER}/{file.filename}_native.fcsv'
+        target_native = f'{OUTPUT_FOLDER}/{file_name_without_extension}_native.fcsv'
         print(target_native)
 
         print("------------")
@@ -80,16 +81,24 @@ def predict():
     except Exception as e:
         return jsonify({"message": f"Error processing the file: {str(e)}"}), 500
 
-
 @app.route("/download-output", methods=["GET"])
 def download_output():
-    output_zip_path = os.path.join(root_dir, "{file.filename}_output.zip")
-
-    # Zip the output folder
-    shutil.make_archive(output_zip_path.replace(".zip", ""), 'zip', OUTPUT_FOLDER)
-
+    file_name_without_extension = request.args.get("file_name")
+    if not file_name_without_extension:
+        return jsonify({"error": "File name is required"}), 400
+    
+    output_folder = os.path.join(root_dir, f"{file_name_without_extension}_output")
+    
+    if not os.path.exists(output_folder):
+        return jsonify({"error": "Output folder not found"}), 404
+    
+    output_zip_path = os.path.join(root_dir, f"{file_name_without_extension}_output.zip")
+    
+    # Zip the output folder into a .zip file
+    shutil.make_archive(output_zip_path.replace(".zip", ""), 'zip', output_folder)
+    
     # Send the ZIP file to the frontend
-    return send_file(output_zip_path, as_attachment=True)
+    return send_file(output_zip_path, as_attachment=True, download_name=f"{file_name_without_extension}_output.zip")
 
 if __name__ == "__main__":
     app.run(debug=True)
