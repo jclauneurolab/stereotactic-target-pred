@@ -85,7 +85,7 @@ const FileUpload = () => {
           <option value="STN">STN</option>
           <option value="cZI">cZI</option>
         </select>
-        <button onClick={handleSubmit}>Upload</button>
+        <button onClick={handleSubmit}>Submit</button>
         {success && (
           <div>
             <button onClick={handleDownload}>Download Output</button>
