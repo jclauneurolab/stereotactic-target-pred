@@ -8,15 +8,12 @@ import shutil
 app = Flask(__name__)
 CORS(app)
 
-# Get the backend directory
 current_dir = os.path.dirname(os.path.abspath(__file__))
 print(current_dir)
 
-# Move up two levels to reach the project root
 root_dir = os.path.abspath(os.path.join(current_dir, "..", ".."))
 print(root_dir)
 
-# Define path to the config file
 configfile = os.path.join(root_dir, "config", "config.yaml")
 
 with open(configfile, "r") as file:
@@ -40,12 +37,10 @@ def predict():
 
     file = request.files.get("file")
     model_type = request.form.get("model_type")
+    print(model_type)
 
     if not file or not model_type:
         return jsonify({"error": "Missing file or model type"}), 400
-
-    # if not file.filename.endswith(".fcsv"):
-    #     return jsonify({"error": "Only .fcsv files are allowed"}), 400
 
     # Save file
     file_path = os.path.join(UPLOAD_FOLDER, file.filename)
@@ -54,18 +49,17 @@ def predict():
 
     # Run the model prediction
     try:
-        # You can replace these with your actual paths and arguments
-        slicer_tfm = f'{OUTPUT_FOLDER}/ACPC.txt'
+        slicer_tfm = f'{OUTPUT_FOLDER}/{file.filename}_ACPC.txt'
         print(slicer_tfm)
         template_fcsv = os.path.join(root_dir, config.get("template_fcsv"))
         print(template_fcsv)
         midpoint = 'PMJ'
         print(midpoint)
-        model_path = os.path.join(root_dir, config.get("STN"))
+        model_path = os.path.join(root_dir, config.get(model_type))
         print(model_path)
-        target_mcp = f'{OUTPUT_FOLDER}/mcp.fcsv'
+        target_mcp = f'{OUTPUT_FOLDER}/{file.filename}_mcp.fcsv'
         print(target_mcp)
-        target_native = f'{OUTPUT_FOLDER}/native.fcsv'
+        target_native = f'{OUTPUT_FOLDER}/{file.filename}_native.fcsv'
         print(target_native)
 
         print("------------")
@@ -89,7 +83,7 @@ def predict():
 
 @app.route("/download-output", methods=["GET"])
 def download_output():
-    output_zip_path = os.path.join(root_dir, "output.zip")
+    output_zip_path = os.path.join(root_dir, "{file.filename}_output.zip")
 
     # Zip the output folder
     shutil.make_archive(output_zip_path.replace(".zip", ""), 'zip', OUTPUT_FOLDER)
