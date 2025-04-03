@@ -32,7 +32,7 @@ const FileUpload = () => {
     console.log("file", {file}, "model_type", {selectedModel});
 
     try {
-      const response = await axios.post("http://127.0.0.1:5000/apply-model", formData, {
+      const response = await axios.post("http://127.0.0.1:5001/apply-model", formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
       alert(`Success: ${response.data.message}`);
@@ -51,7 +51,7 @@ const FileUpload = () => {
     }
     
     try {
-      const response = await axios.get(`http://127.0.0.1:5000/download-output?file_name=${fileNameWithoutExtension}`, {
+      const response = await axios.get(`http://127.0.0.1:5001/download-output?file_name=${fileNameWithoutExtension}`, {
         responseType: "blob",
       });
 
