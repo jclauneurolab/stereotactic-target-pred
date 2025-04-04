@@ -1,11 +1,11 @@
-from flask import Flask, request, jsonify, send_file
+from flask import Flask, request, jsonify, send_file, send_from_directory
 from flask_cors import CORS
 import os
 import yaml
 from apply_model import model_pred
 import shutil
 
-app = Flask(__name__)
+app = Flask(__name__, static_folder="../frontend/dist", static_url_path='/')
 CORS(app)
 
 current_dir = os.path.dirname(os.path.abspath(__file__))
@@ -99,6 +99,14 @@ def download_output():
     
     # Send the ZIP file to the frontend
     return send_file(output_zip_path, as_attachment=True, download_name=f"{file_name_without_extension}_output.zip")
+
+# Serve the React frontend
+@app.route("/", defaults={"path": ""})
+@app.route("/<path:path>")
+def serve_frontend(path):
+    if path and os.path.exists(os.path.join(app.static_folder, path)):
+        return send_from_directory(app.static_folder, path)
+    return send_from_directory(app.static_folder, "index.html")
 
 if __name__ == "__main__":
     app.run(debug=True)
