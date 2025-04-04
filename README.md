@@ -15,5 +15,4 @@
 
 **To run in build environment locally**
 1. to build the frontend run `npm run build`
-2. `poetry add gunicon`
 3. `poetry run gunicorn -w 4 -b 127.0.0.1:5001 app:app`
