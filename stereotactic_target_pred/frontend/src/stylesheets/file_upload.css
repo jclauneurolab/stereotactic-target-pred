@@ -12,6 +12,7 @@ body {
   align-items: center;
   justify-content: center;
   min-height: 80vh;
+  padding-bottom: 50px;
 }
   
 .dropzone {
@@ -86,3 +87,12 @@ button:focus {
   outline: none;
 }
   
+.output-buttons {
+  gap: 10px;
+  display: flex;
+}
+
+.graph {
+  padding-top:20px;
+  width: 800px;
+}

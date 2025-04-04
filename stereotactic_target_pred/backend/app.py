@@ -3,6 +3,7 @@ from flask_cors import CORS
 import os
 import yaml
 from apply_model import model_pred
+from visualizations import generate_3d_plot
 import shutil
 
 app = Flask(__name__)
@@ -91,5 +92,38 @@ def download_output():
     # Send the ZIP file to the frontend
     return send_file(output_zip_path, as_attachment=True)
 
+@app.route("/visualizations", methods=["GET", "POST"])
+def show_visualizations():
+    file_path = None
+    target_file_path = None
+    visualization_target = None
+
+    if request.method == "POST":
+        file = request.files.get("file")
+        if not file:
+            return jsonify({"error": "No file provided"}), 400
+        file_path = os.path.join(UPLOAD_FOLDER, file.filename)
+        file.save(file_path)
+        print("File uploaded to:", file_path)
+
+        visualization_target = request.form.get("targetType")
+        print("Visualization target (POST):", visualization_target)
+
+    else:
+        file_path = request.args.get("file_path")
+        if not file_path or not os.path.exists(file_path):
+            return jsonify({"error": "Invalid or missing file_path"}), 400
+
+        visualization_target = request.args.get("targetType")
+        print("Visualization target (GET):", visualization_target)
+
+    if visualization_target:
+        target_file_path = os.path.join(OUTPUT_FOLDER, f"{os.path.basename(file_path)}_{visualization_target}.fcsv")
+        print("Target file path:", target_file_path)
+
+    scatter_html = generate_3d_plot(file_path, target_file_path, visualization_target)
+    return jsonify({"scatter": scatter_html})
+ 
+ 
 if __name__ == "__main__":
     app.run(debug=True)
