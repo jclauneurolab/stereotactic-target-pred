@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useDropzone } from "react-dropzone";
 import axios from "axios";
-import '../stylesheets/file_upload.css'
+import '../stylesheets/file_upload.css';
 
 const FileUpload = () => {
   const [selectedModel, setSelectedModel] = useState(""); 
@@ -10,11 +10,15 @@ const FileUpload = () => {
   const [visuals, setVisuals] = useState(null);
   const [showTargetDropdown, setShowTargetDropdown] = useState(false);
   const [targetType, setTargetType] = useState(""); 
+  const [fileNameWithoutExtension, setFileNameWithoutExtension] = useState("");
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     accept: ".fcsv",
     onDrop: (acceptedFiles) => {
-      setFile(acceptedFiles[0]);
+      const uploadedFile = acceptedFiles[0];
+      setFile(uploadedFile);
+      const fileNameWithoutExt = uploadedFile.name.split('.')[0];
+      setFileNameWithoutExtension(fileNameWithoutExt);
     },
   });
 
@@ -28,10 +32,10 @@ const FileUpload = () => {
     const formData = new FormData();
     formData.append("file", file);
     formData.append("model_type", selectedModel);
-    console.log("file", {file}, "model_type", {selectedModel})
+    console.log("file", {file}, "model_type", {selectedModel});
 
     try {
-      const response = await axios.post("http://127.0.0.1:5000/apply-model", formData, {
+      const response = await axios.post("http://127.0.0.1:5001/apply-model", formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
       alert(`Success: ${response.data.message}`);
@@ -44,9 +48,27 @@ const FileUpload = () => {
   };
 
   const handleDownload = async () => {
-    const response = await axios.get("http://127.0.0.1:5000/download-output", {
-      responseType: "blob", 
-    });
+    if (!fileNameWithoutExtension) {
+      alert("No file to download");
+      return;
+    }
+    
+    try {
+      const response = await axios.get(`http://127.0.0.1:5001/download-output?file_name=${fileNameWithoutExtension}`, {
+        responseType: "blob",
+      });
+
+      const url = window.URL.createObjectURL(new Blob([response.data]));
+      const link = document.createElement("a");
+      link.href = url;
+      link.setAttribute("download", `${fileNameWithoutExtension}_output.zip`);
+      document.body.appendChild(link);
+      link.click();
+    } catch (error) {
+      console.error("Download failed:", error);
+      alert("Download failed!");
+    }
+  };
 
     const url = window.URL.createObjectURL(new Blob([response.data]));
     const link = document.createElement("a");
