@@ -14,5 +14,13 @@
 8. Run the frontend with `npm run dev`
 
 **To run in build environment locally**
-1. to build the frontend run `npm run build`
-3. `poetry run gunicorn -w 4 -b 127.0.0.1:5001 app:app`
+1. poetry shell
+2. poetry install
+3. In stereotactic-target-pred/frontend: `npm run build`
+4. In stereotactic-target-pred/backend: `poetry run gunicorn -w 4 -b 127.0.0.1:5001 app:app`
+
+**To add to git:**
+- production url
+- production secret key
+- production flask env
+- secret key 

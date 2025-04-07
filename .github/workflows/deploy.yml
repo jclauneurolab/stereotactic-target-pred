@@ -1,0 +1,61 @@
+# name: Stereotactic Prediction Deploy
+
+# on:
+#   workflow_dispatch:
+#     inputs:
+#       comments:
+#         description: "Comments"
+
+# jobs:
+#   deploy:
+#     runs-on: ubuntu-latest
+
+#     steps:
+#       - name: Print author
+#         run: |
+#           echo "Author: ${{ github.event.inputs.author }}"
+#           echo "Date: ${{ github.event.inputs.date }}"
+#           echo "Comments: ${{ github.event.inputs.comments }}"
+
+#       - name: Checkout reference branch
+#         uses: actions/checkout@v4
+
+#       - name: Install poetry
+#         uses: snok/install-poetry@v1
+#         with:
+#           virtualenvs-create: true
+#           virtualenvs-in-project: true
+
+#       - name: Install project
+#         run: |
+#           poetry install
+
+#       - name: Build package with poetry
+#         run: |
+#           poetry build
+
+#       - name: Write .env file
+#         env:
+#           FLASK_ENV: ${{ secrets.PRODUCTION_FLASK_ENV }}
+#           SECRET_KEY: ${{ secrets.PRODUCTION_SECRET_KEY }}
+#         run: |
+#           echo FLASK_ENV="$FLASK_ENV" >> .env
+#           echo SECRET_KEY="$SECRET_KEY" >> .env
+
+#       - name: Build release
+#         run: |
+#           DATE=`date +%s`
+#           mkdir -p releases/stereotaxy-"$DATE"
+#           cp .env releases/stereotaxy-"$DATE"
+#           WHEEL=`ls dist | grep whl`
+#           cp dist/"$WHEEL" releases/stereotaxy-"$DATE"
+#           echo WHEEL="$WHEEL" >> $GITHUB_ENV
+#           echo DATE="$DATE" >> $GITHUB_ENV
+
+#       - name: Deploy release
+#         env:
+#           PRODUCTION_URL: ${{ secrets.PRODUCTION_URL }}
+#           PRIVATE_KEY: ${{ secrets.PRIVATE_KEY }}
+#         run: |
+#           echo "$PRIVATE_KEY" > .private_key
+#           poetry run python3 fabrictasks.py "$PRODUCTION_URL" releases/stereotaxy-"$DATE" /opt/stereotaxy/releases "$WHEEL" /opt/stereotaxy/venv-stereotaxy .private_key stereotaxy
