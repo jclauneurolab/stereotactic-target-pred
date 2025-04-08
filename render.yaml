@@ -1,0 +1,6 @@
+services:
+  - type: web
+    name: afids-stereotaxy-pred
+    env: docker
+    dockerfilePath: ./docker/Dockerfile  # path to your Dockerfile
+    buildCommand: ""  # leave this empty since Docker handles the build
