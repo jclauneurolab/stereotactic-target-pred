@@ -1,0 +1,6 @@
+uploads
+*_output
+__pycache__/
+*.pyc
+*.pyo
+*.zip
