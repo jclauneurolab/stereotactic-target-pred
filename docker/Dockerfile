@@ -58,7 +58,7 @@ WORKDIR /app/stereotactic_target_pred
 # Install dependencies using Poetry
 RUN poetry install --no-root
 
-#ARG CACHEBUST_FRONTEND=1
+ARG CACHEBUST_FRONTEND=1
 COPY --from=frontend-builder /app/frontend/dist /app/stereotactic_target_pred/stereotactic_target_pred/backend/client
 
 EXPOSE 5000

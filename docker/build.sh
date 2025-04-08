@@ -14,7 +14,7 @@ REPO_DIR="$(dirname "$SCRIPT_DIR")"
 #
 source ${SCRIPT_DIR}/Docker_env
 
-RUN=${1:-true}
+RUN=${1:-false}
 #
 # Build the project
 #
