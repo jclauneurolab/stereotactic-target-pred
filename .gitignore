@@ -1,5 +1,5 @@
 uploads
-*_output
+output
 __pycache__/
 *.pyc
 *.pyo

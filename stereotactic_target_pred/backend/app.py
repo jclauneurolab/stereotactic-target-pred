@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify, send_file, send_from_directory
+from flask import Flask, request, jsonify, send_file, send_from_directory, after_this_request
 from flask_cors import CORS
 import os
 import yaml
@@ -46,7 +46,7 @@ def predict():
     file_name_without_extension = os.path.splitext(os.path.basename(file.filename))[0]
     print("no extension", file_name_without_extension)
 
-    OUTPUT_FOLDER = os.path.join(root_dir, f"{file_name_without_extension}_output")
+    OUTPUT_FOLDER = os.path.join(root_dir,"output", f"{file_name_without_extension}_output")
     os.makedirs(OUTPUT_FOLDER, exist_ok=True)
     # Run the model prediction
     try:
@@ -87,7 +87,7 @@ def download_output():
     if not file_name_without_extension:
         return jsonify({"error": "File name is required"}), 400
     
-    output_folder = os.path.join(root_dir, f"{file_name_without_extension}_output")
+    output_folder = os.path.join(root_dir, "output", f"{file_name_without_extension}_output")
     
     if not os.path.exists(output_folder):
         return jsonify({"error": "Output folder not found"}), 404
@@ -96,6 +96,15 @@ def download_output():
     
     # Zip the output folder into a .zip file
     shutil.make_archive(output_zip_path.replace(".zip", ""), 'zip', output_folder)
+
+    @after_this_request
+    def remove_file(response):
+        try:
+            os.remove(output_zip_path)
+            print(f"Deleted ZIP file: {output_zip_path}")
+        except Exception as e:
+            print(f"Error deleting file {output_zip_path}: {e}")
+        return response
     
     # Send the ZIP file to the frontend
     return send_file(output_zip_path, as_attachment=True, download_name=f"{file_name_without_extension}_output.zip")
