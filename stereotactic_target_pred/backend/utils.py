@@ -66,7 +66,6 @@ def fcsvtodf(fcsv_path):
     - num_points: int, number of fiducial points
     """
 
-    print("inside fcsvtodf")
     # Extract the subject ID from the file path (naming is in bids-like)
     try:
         subject_id = re.search(r"(sub-\w+)", fcsv_path).group(1)
@@ -166,7 +165,6 @@ def compute_distance(fcsv_path, fid1, fid2):
     - distance: float, Euclidean distance between fiducials
     """
 
-    print("inside compute distance")
     # Retrieve indices of the fiducials
     index1, index2 = get_fiducial_index(fid1), get_fiducial_index(fid2)
 
@@ -273,7 +271,6 @@ def acpcmatrix(
     - matrix: np.ndarray, A 4x4 affine transformation matrix.
     """
 
-    print("inside acpc matrix")
     # A-P axis
     acpc = compute_distance(fcsv_path, "AC", "PC")  # vector from PC to AC
     # unit vector defining anterior and posterior axis
@@ -378,7 +375,6 @@ def transform_afids(fcsv_path, slicer_tfm, midpoint):
     - tcoords: np.ndarray, transformed coordinates
     """
 
-    print("inside transform afids")
     # Compute the 4x4 AC-PC transformation matrix
     xfm_txt = acpcmatrix(
         fcsv_path=fcsv_path, midline=midpoint, transform_file_name=slicer_tfm

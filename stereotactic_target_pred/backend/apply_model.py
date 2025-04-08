@@ -155,7 +155,6 @@ def model_pred(
     -------
         None
     """
-    print("inside model pred")
     # Transform input fiducial data using the specified transformation matrix
     fcsvdf_xfm = transform_afids(in_fcsv, slicer_tfm, midpoint)
     xfm_txt = fcsvdf_xfm[1]  # Transformation matrix in array form
@@ -223,7 +222,6 @@ def model_pred(
     # Convert MCP-centered coordinates to native space
     stn_r_mcp = y_sub[0, :] + mcp.ravel()
     stn_l_mcp = y_sub[1, :] + mcp.ravel()
-    print("here9")
     # Create vectors for right and left fiducials with homogeneous coordinates
     vecr = np.hstack([stn_r_mcp.ravel(), 1])
     vecl = np.hstack([stn_l_mcp.ravel(), 1])
@@ -232,7 +230,6 @@ def model_pred(
     # to convert coordinates to native space
     stn_r_native = np.linalg.inv(xfm_txt) @ vecr.T
     stn_l_native = np.linalg.inv(xfm_txt) @ vecl.T
-    print("here10")
     # Store the final native-space coordinates in a matrix
     stncoords = np.zeros((2, 3))
     stncoords[0, :] = stn_r_native[:3]
