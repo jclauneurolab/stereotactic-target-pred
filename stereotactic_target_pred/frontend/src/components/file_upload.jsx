@@ -2,9 +2,10 @@ import React, { useState } from "react";
 import { useDropzone } from "react-dropzone";
 import axios from "axios";
 import '../stylesheets/file_upload.css';
+import { API_URL } from '../env'
 
 const FileUpload = () => {
-  const [selectedModel, setSelectedModel] = useState(""); 
+  const [selectedModel, setSelectedModel] = useState("");
   const [file, setFile] = useState(null);
   const [success, setSuccess] = useState(false);
   const [fileNameWithoutExtension, setFileNameWithoutExtension] = useState("");
@@ -29,10 +30,10 @@ const FileUpload = () => {
     const formData = new FormData();
     formData.append("file", file);
     formData.append("model_type", selectedModel);
-    console.log("file", {file}, "model_type", {selectedModel});
+    console.log("file", { file }, "model_type", { selectedModel });
 
     try {
-      const response = await axios.post("http://127.0.0.1:5001/apply-model", formData, {
+      const response = await axios.post(`${API_URL}/apply-model`, formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
       alert(`Success: ${response.data.message}`);
@@ -49,9 +50,9 @@ const FileUpload = () => {
       alert("No file to download");
       return;
     }
-    
+
     try {
-      const response = await axios.get(`http://127.0.0.1:5001/download-output?file_name=${fileNameWithoutExtension}`, {
+      const response = await axios.get(`${API_URL}/download-output?file_name=${fileNameWithoutExtension}`, {
         responseType: "blob",
       });
 
@@ -84,7 +85,7 @@ const FileUpload = () => {
           <option value="STN">STN</option>
           <option value="cZI">cZI</option>
         </select>
-        <button onClick={handleSubmit}>Upload</button>
+        <button onClick={handleSubmit}>Submit</button>
         {success && (
           <div>
             <button onClick={handleDownload}>Download Output</button>
