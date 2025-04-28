@@ -70,6 +70,12 @@ const FileUpload = () => {
 
   return (
     <div>
+      <p className="autoafids-content">
+        To automatically produce the anatomical fiducial fcsv file from a NIFTI MRI image, please refer to the{" "}
+        <a href="https://github.com/afids/autoafids" target="_blank" rel="noopener noreferrer">
+          Autoafids program
+        </a>.
+      </p>
       <div className="container">
         <div {...getRootProps()} className="dropzone">
           <input {...getInputProps()} />
