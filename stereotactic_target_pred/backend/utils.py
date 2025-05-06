@@ -29,8 +29,8 @@ if local_devel:
 else:
     app = Flask(
         __name__,
-        # static_folder = "../frontend/build" # For local testing
-        static_folder="/app/stereotactic_target_pred/stereotactic_target_pred/backend/client",
+        static_folder = "../frontend/dist", # For local testing
+        # static_folder="/app/stereotactic_target_pred/stereotactic_target_pred/backend/client",
         static_url_path="/"
     )
     cors = CORS(app=app)
