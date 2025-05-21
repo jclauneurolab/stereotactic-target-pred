@@ -71,9 +71,9 @@ const FileUpload = () => {
   return (
     <div>
       <p className="autoafids-content">
-        To automatically produce the anatomical fiducial fcsv file from a NIFTI MRI image, please refer to the{" "}
+        To automatically produce the anatomical fiducial .fcsv file from a NIFTI MRI image, please refer to the{" "}
         <a href="https://github.com/afids/autoafids" target="_blank" rel="noopener noreferrer">
-          Autoafids program
+          AutoAFIDs program
         </a>.
       </p>
       <div className="container">
@@ -82,14 +82,16 @@ const FileUpload = () => {
           {isDragActive ? (
             <p>Drop the file here...</p>
           ) : (
-            <p>Drag & drop an afids .fcsv file here, or click to select</p>
+            <p>Drag & drop an AFIDs .fcsv file here, or click to select</p>
           )}
         </div>
         {file && <p>Selected File: {file.name}</p>}
         <select onChange={(e) => setSelectedModel(e.target.value)}>
-          <option value="">Select Model</option>
+          <option value="">Select Prediction Model</option>
           <option value="STN">STN</option>
-          <option value="cZI">cZI</option>
+          <option value="cZI">cZI(not supported yet)</option>
+          <option value="cZI">CM(not supported yet)</option>
+
         </select>
         <button onClick={handleSubmit}>Submit</button>
         {success && (
