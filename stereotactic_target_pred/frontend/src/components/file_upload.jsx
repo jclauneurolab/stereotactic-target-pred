@@ -76,6 +76,14 @@ const FileUpload = () => {
           AutoAFIDs program
         </a>.
       </p>
+
+            <div className="protocol-note">
+            <p><strong>Note:</strong> Ensure your uploaded file abides by these specifications:</p>
+            <ul>
+              <li>File name starts with <code>sub-"label"</code></li>
+              <li>The label column within the <code>.fscv</code> file abides by the AFIDs labels (e.g., <code>AC = 1</code>) shown in the Protocol tab</li>
+            </ul>
+            </div>
       <div className="container">
         <div {...getRootProps()} className="dropzone">
           <input {...getInputProps()} />

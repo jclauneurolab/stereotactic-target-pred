@@ -19,7 +19,6 @@ function App() {
       {/* Tab Content */}
       <div className="tab-content">
         {activeTab === "upload" && <FileUpload />}
-
         {activeTab === "protocol" && (
           <div>
             <h2>AFIDs Protocol (16 AFIDs)</h2>
