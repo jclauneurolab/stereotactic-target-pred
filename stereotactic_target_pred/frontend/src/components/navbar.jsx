@@ -6,7 +6,7 @@ const Navbar = () => {
 
     return (
         <div className="navbar">
-            <h1 className="navbar-title">Afids Stereotaxy Prediction</h1>
+            <h1 className="navbar-title">AFIDs Stereotaxy Prediction</h1>
             <img src={afids_logo} alt="Logo" className="navbar-logo" />
         </div>
     )

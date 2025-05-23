@@ -40,3 +40,62 @@
 .read-the-docs {
   color: #888;
 }
+
+/* === Tabs === */
+.tabs {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  padding: 1rem 0;
+  margin-bottom: 1rem;
+  border-bottom: 2px solid #eee;
+}
+
+.tabs button {
+  padding: 0.5rem 1rem;
+  font-size: 1rem;
+  background-color: #e6e6e6;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  font-weight: bold;
+}
+
+.tabs button:hover {
+  background-color: #d0d0d0;
+}
+
+.tab-content {
+  padding: 1rem;
+  max-width: 900px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.landmark {
+  margin-bottom: 3rem;
+}
+
+.landmark img {
+  max-width: 100%;
+  height: auto;
+  margin-top: 1rem;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.protocol-note {
+  background-color: #000000;
+  border-left: 4px solid #25f500;
+  padding: 1rem 1.5rem;
+  margin: 1rem auto 2rem auto;
+  max-width: 800px;
+  text-align: left;
+  border-radius: 6px;
+  font-size: 0.95rem;
+}
+.protocol-note a {
+  color: #2563eb;
+  text-decoration: underline;
+}
