@@ -63,7 +63,7 @@ const landmarkData = [
   { id: "02_PC", title: "2. PC [midline]", desc: "Place at the center of the posterior commissure." },
   { id: "03_ICS", title: "3. Infracollicular Sulcus [midline]", desc: "Inferior boundary of the intercollicular sulcus at the junction of the inferior colliculi." },
   { id: "04_PMJ", title: "4. Pontomesencephalic Junction [midline]", desc: "Select the inferior/pontine edge of the PMJ using sagittal and coronal views." },
-  { id: "05_SIF", title: "5. Superior Interpeduncular Fossa [midline]", desc: "Dorsal aspect of the interpeduncular fossa between the cerebral peduncles." },
+  { id: "05_SIPF", title: "5. Superior Interpeduncular Fossa [midline]", desc: "Dorsal aspect of the interpeduncular fossa between the cerebral peduncles." },
   { id: "06_RSLMS", title: "6. Right Superior Lateral Mesencephalic Sulcus", desc: "Right superior angle of the brainstem at the mesencephalic surface." },
   { id: "07_LSLMS", title: "7. Left Superior Lateral Mesencephalic Sulcus", desc: "Left superior angle of the brainstem at the mesencephalic surface." },
   { id: "08_RILMS", title: "8. Right Inferior Lateral Mesencephalic Sulcus", desc: "Junction between midbrain and pons on the right side." },
