@@ -52,18 +52,6 @@ function App() {
             ))}
           </div>
         )}
-
-          {landmarkData.map((lm) => (
-            <div className="landmark" key={lm.id}>
-              <h3>{lm.title}</h3>
-              <p><strong>Description:</strong> {lm.desc}</p>
-              <img
-                src={`/protocol_imgs/${lm.id}.png`}
-                alt={`${lm.title} image`}
-                style={{ maxWidth: "600px", width: "100%", margin: "1rem auto" }}
-              />
-            </div>
-          ))}
         </div>
       )}
       </div>
