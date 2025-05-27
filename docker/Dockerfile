@@ -47,7 +47,6 @@ RUN which poetry
 
 # Copy application files
 COPY config /app/stereotactic_target_pred/config
-COPY uploads /app/stereotactic_target_pred/uploads
 COPY resources /app/stereotactic_target_pred/resources
 COPY stereotactic_target_pred/backend /app/stereotactic_target_pred/stereotactic_target_pred/backend
 COPY poetry.lock /app/stereotactic_target_pred
