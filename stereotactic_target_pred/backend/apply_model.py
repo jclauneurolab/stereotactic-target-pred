@@ -15,34 +15,16 @@ right_afids = [
     "x_12",
     "x_15",
     "x_17",
-    "x_21",
-    "x_23",
-    "x_25",
-    "x_27",
-    "x_29",
-    "x_31",
     "y_6",
     "y_8",
     "y_12",
     "y_15",
     "y_17",
-    "y_21",
-    "y_23",
-    "y_25",
-    "y_27",
-    "y_29",
-    "y_31",
     "z_6",
     "z_8",
     "z_12",
     "z_15",
     "z_17",
-    "z_21",
-    "z_23",
-    "z_25",
-    "z_27",
-    "z_29",
-    "z_31",
 ]
 left_afids = [
     "x_7",
@@ -50,34 +32,16 @@ left_afids = [
     "x_13",
     "x_16",
     "x_18",
-    "x_22",
-    "x_24",
-    "x_26",
-    "x_28",
-    "x_30",
-    "x_32",
     "y_7",
     "y_9",
     "y_13",
     "y_16",
     "y_18",
-    "y_22",
-    "y_24",
-    "y_26",
-    "y_28",
-    "y_30",
-    "y_32",
     "z_7",
     "z_9",
     "z_13",
     "z_16",
     "z_18",
-    "z_22",
-    "z_24",
-    "z_26",
-    "z_28",
-    "z_30",
-    "z_32",
 ]
 combined_lables = [
     "AC",
@@ -87,26 +51,17 @@ combined_lables = [
     "SIPF",
     "SLMS",
     "ILMS",
-    "CUL",
     "IMS",
     "MB",
-    "PG",
     "LVAC",
     "LVPC",
-    "GENU",
-    "SPLE",
-    "ALTH",
-    "SAMTH",
-    "IAMTH",
-    "IGO",
-    "VOH",
-    "OSF",
 ]
 combined_lables = [
     element + axis for axis in ["x", "y", "z"] for element in combined_lables
 ]
-right = [6, 8, 12, 15, 17, 21, 23, 25, 27, 29, 31]
-left = [7, 9, 13, 16, 18, 22, 24, 26, 28, 30, 32]
+
+right = [6, 8, 12, 15, 17]
+left = [7, 9, 13, 16, 18]
 
 # Dictionary for AFID labels
 afids_labels = {
@@ -119,31 +74,14 @@ afids_labels = {
     7: "LSLMS",
     8: "RILMS",
     9: "LILMS",
-    10: "CUL",
     11: "IMS",
     12: "RMB",
     13: "LMB",
-    14: "PG",
     15: "RLVAC",
     16: "LLVAC",
     17: "RLVPC",
     18: "LLVPC",
-    19: "GENU",
-    20: "SPLE",
-    21: "RALTH",
-    22: "LALTH",
-    23: "RSAMTH",
-    24: "LSAMTH",
-    25: "RIAMTH",
-    26: "LIAMTH",
-    27: "RIGO",
-    28: "LIGO",
-    29: "RVOH",
-    30: "LVOH",
-    31: "ROSF",
-    32: "LOSF",
 }
-
 
 def dftodfml(fcsvdf):
     """
@@ -161,13 +99,23 @@ def dftodfml(fcsvdf):
     # Extract the x, y, z coordiantes and store them
     # in data science friendly format
     # (i.e., features in cols and subject in rows)
+    
+    # define labels that are fed into the model (mandatory labels)
+    allowed_labels = [1,2,3,4,5,6,7,8,9,11,12,13,15,16,17,18]
+    
+    # filter for those labels
+    fcsvdf = fcsvdf[fcsvdf["label"].isin(allowed_labels)]
+
+    # use the label column as the indicator for fiducial  
+    label = fcsvdf["label"].astype(int).tolist()
+
     df_xyz = fcsvdf[["x", "y", "z"]].melt().transpose()
 
-    # Use number of row in fcsv to make number points
+    # Use labels in the fcsv to make number points
     colnames = [
-        f"{axis}_{i % int(fcsvdf.shape[0]) + 1}"
+        f"{axis}_{i}" 
+        for i in label 
         for axis in ["x", "y", "z"]
-        for i in range(int(fcsvdf.shape[0]))
     ]
 
     # Reassign features to be descriptive of coordinate
