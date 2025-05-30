@@ -82,6 +82,7 @@ const FileUpload = () => {
             <ul>
               <li>File name starts with <code>sub-"label"</code></li>
               <li>The label column within the <code>.fscv</code> file abides by the AFIDs labels (e.g., <code>AC = 1</code>) shown in the Protocol tab</li>
+              <li>Uploads with both 16 and 32 AFID's are accepted, as long as all the required labels are included in the file.</li>
               <li>Upload not working? Check out this demo template <a href="/public/tpl-MNI2009cAsym_afids.fcsv" download>here</a></li>
             </ul>
             </div>
