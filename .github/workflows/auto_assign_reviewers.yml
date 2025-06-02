@@ -6,6 +6,9 @@ on:
   pull_request_target:
     types: [opened, ready_for_review]
 
+permissions:
+  pull-requests: write
+  
 jobs:
   assign-reviewer:
     uses: khanlab/actions/.github/workflows/workflow-pr_task-assignReviewer.yml@v0.3.4
