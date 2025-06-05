@@ -11,7 +11,7 @@
 5. In **stereotactic-target-pred/stereotactic_target_pred/backend/utils.py** comment line 33 and uncomment line 32
 6. Run the backend with `python3 -m flask --app connector.py run --debug`
 7. Set up the frontend with `cd stereotactic_target_pred/frontend`
-8. In **stereotactic-target-pred/stereotactic_target_pred/frontend/src/env.jsx** comment line 7 and uncomment line 3
+8. In **stereotactic-target-pred/stereotactic_target_pred/frontend/src/env.jsx** comment line 9 and uncomment line 3
 6. Use the latest version of node with `nvm use --lts`
 7. Install the required libraries via `npm install`
 8. Run the frontend with `npm run dev`
