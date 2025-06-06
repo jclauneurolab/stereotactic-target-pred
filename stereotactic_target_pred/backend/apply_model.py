@@ -225,9 +225,10 @@ def fcsvtodf(fcsv_path):
     # Extract the subject ID from the file path (naming is in bids-like)
     try:
         subject_id = re.search(r"(sub-\w+)", fcsv_path).group(1)
-    except:
-       print("no subject id found")
-
+    except AttributeError:
+        print(f"No subject ID found in: {fcsv_path}, using 'unknown'")
+        subject_id = "unknown"
+        
     # Read in .fcsv file, skip header
     df_raw = pd.read_table(fcsv_path, sep=",", header=2)
 
