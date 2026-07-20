@@ -10,7 +10,7 @@ left_afids = ['x_7','x_9','x_13','x_16','x_18','x_22','x_24','x_26','x_28','x_30
 combined_lables = ['AC','PC', 'ICS', 'PMJ','SIPF','SLMS','ILMS','CUL','IMS','MB','PG','LVAC','LVPC','GENU','SPLE','ALTH','SAMTH','IAMTH','IGO','VOH','OSF']
 combined_lables = [element + axis for axis in ['x', 'y', 'z'] for element in combined_lables]
 
-def cZI_dftodfml(fcsvdf):
+def target_dftodfml(fcsvdf):
 
     # define labels that are fed into the model (mandatory labels)
     allowed_labels = list(range(1, 33))
@@ -39,7 +39,7 @@ def cZI_dftodfml(fcsvdf):
     
     return df_xyz_clean
 
-def cZI_model_pred(in_fcsv, model, midpoint, slicer_tfm, template_fcsv, target_mcp, target_native):
+def target_model_pred(in_fcsv, model, midpoint, slicer_tfm, template_fcsv, target_mcp, target_native):
 
     """
     Generate model predictions for fiducial points
@@ -69,7 +69,7 @@ def cZI_model_pred(in_fcsv, model, midpoint, slicer_tfm, template_fcsv, target_m
     # Transform input fiducial data using the specified transformation matrix
     fcsvdf_xfm = transform_afids(in_fcsv, slicer_tfm, midpoint)
     xfm_txt = fcsvdf_xfm[1]
-    df_sub = cZI_dftodfml(fcsvdf_xfm[0])
+    df_sub = target_dftodfml(fcsvdf_xfm[0])
     
     # Center on MCP
     df_sub_mcp, mcp = mcp_origin(df_sub)
@@ -130,20 +130,20 @@ def cZI_model_pred(in_fcsv, model, midpoint, slicer_tfm, template_fcsv, target_m
     fids_to_fcsv(y_sub, template_fcsv, target_mcp)
 
     # Convert MCP-centered coordinates to native space
-    cZI_r_mcp = y_sub[0, :] + mcp.ravel()
-    cZI_l_mcp = y_sub[1, :] + mcp.ravel()
+    target_r_mcp = y_sub[0, :] + mcp.ravel()
+    target_l_mcp = y_sub[1, :] + mcp.ravel()
     # Create vectors for right and left fiducials with homogeneous coordinates
-    vecr = np.hstack([cZI_r_mcp.ravel(), 1])
-    vecl = np.hstack([cZI_l_mcp.ravel(), 1])
+    vecr = np.hstack([target_r_mcp.ravel(), 1])
+    vecl = np.hstack([target_l_mcp.ravel(), 1])
 
     # Apply the inverse transformation matrix
     # to convert coordinates to native space
-    cZI_r_native = np.linalg.inv(xfm_txt) @ vecr.T
-    cZI_l_native = np.linalg.inv(xfm_txt) @ vecl.T
+    target_r_native = np.linalg.inv(xfm_txt) @ vecr.T
+    target_l_native = np.linalg.inv(xfm_txt) @ vecl.T
     # Store the final native-space coordinates in a matrix
-    cZI_coords = np.zeros((2, 3))
-    cZI_coords[0, :] = cZI_r_native[:3]
-    cZI_coords[1, :] = cZI_l_native[:3]
+    target_coords = np.zeros((2, 3))
+    target_coords[0, :] = target_r_native[:3]
+    target_coords[1, :] = target_l_native[:3]
 
     # Save the native-space coordinates to the output file
-    fids_to_fcsv(cZI_coords, template_fcsv, target_native)
+    fids_to_fcsv(target_coords, template_fcsv, target_native)

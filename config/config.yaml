@@ -1,6 +1,8 @@
 #Stereotaxy models 
 STN: 'resources/STN.pkl'
 cZI: 'resources/cZI.pkl' 
+fct: 'resources/fct.pkl'
 template_fcsv: 'resources/target_template.fcsv'
 cZI_template: 'resources/cZI_template.fcsv'
 STN_template: 'resources/STN_template.fcsv'
+fct_template: 'resources/fct_template.fcsv'

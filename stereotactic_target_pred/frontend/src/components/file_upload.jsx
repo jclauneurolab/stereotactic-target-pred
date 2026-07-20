@@ -100,6 +100,7 @@ const FileUpload = () => {
           <option value="">Select Prediction Model</option>
           <option value="STN">STN</option>
           <option value="cZI">cZI</option>
+          <option value="fct">fct</option>
           <option value="CM">CM(not supported yet)</option>
 
         </select>

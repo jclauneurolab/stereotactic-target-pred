@@ -5,7 +5,7 @@ from utils import app, logger, log_tracebook, bad_request, server_error
 import os
 import yaml
 from apply_model import model_pred
-from apply_cZI_model import cZI_model_pred
+from apply_target_model import target_model_pred
 import shutil
 
 current_dir = os.path.dirname(os.path.abspath(__file__))
@@ -105,8 +105,8 @@ def post_model_predict_json():
                 target_mcp=target_mcp,
                 target_native=target_native
             )
-        elif model_type == "cZI":
-            cZI_model_pred(
+        elif model_type == "cZI" or "fct":
+            target_model_pred(
                 in_fcsv=file_path,
                 model=model_path,
                 midpoint=midpoint,
