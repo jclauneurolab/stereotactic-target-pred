@@ -113,9 +113,9 @@ def dftodfml(fcsvdf):
 
     # Use labels in the fcsv to make number points
     colnames = [
-        f"{axis}_{i}" 
+        f"{axis}_{i}"
+        for axis in ["x", "y", "z"] 
         for i in label 
-        for axis in ["x", "y", "z"]
     ]
 
     # Reassign features to be descriptive of coordinate

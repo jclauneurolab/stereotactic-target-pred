@@ -99,8 +99,9 @@ const FileUpload = () => {
         <select onChange={(e) => setSelectedModel(e.target.value)}>
           <option value="">Select Prediction Model</option>
           <option value="STN">STN</option>
-          <option value="cZI">cZI(not supported yet)</option>
-          <option value="cZI">CM(not supported yet)</option>
+          <option value="cZI">cZI</option>
+          <option value="fct">fct</option>
+          <option value="CM">CM(not supported yet)</option>
 
         </select>
         <button onClick={handleSubmit}>Submit</button>
