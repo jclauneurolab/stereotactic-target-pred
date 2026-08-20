@@ -112,10 +112,13 @@ def dftodfml(fcsvdf):
     df_xyz = fcsvdf[["x", "y", "z"]].melt().transpose()
 
     # Use labels in the fcsv to make number points
+    # NOTE: DataFrame.melt() stacks values by column (all x, then all y,
+    # then all z), so colnames must be ordered the same way (axis outer,
+    # point inner) or every name gets paired with the wrong value.
     colnames = [
-        f"{axis}_{i}" 
-        for i in label 
+        f"{axis}_{i}"
         for axis in ["x", "y", "z"]
+        for i in label
     ]
 
     # Reassign features to be descriptive of coordinate
@@ -175,9 +178,14 @@ def mcp_origin(df_afids):
     mcp_z = (df_afids["z_1"] + df_afids["z_2"]) / 2
 
     # subtract MCP coordinates from afids at appropriate coords
-    df_afids_mcpx = df_afids.transpose()[0:32] - mcp_x
-    df_afids_mcpy = df_afids.transpose()[32:64] - mcp_y
-    df_afids_mcpz = df_afids.transpose()[64:98] - mcp_z
+    # NOTE: block size must match the actual number of points per axis
+    # (was hardcoded to 32, which assumed the full 32-AFID protocol;
+    # this pipeline only uses a subset, e.g. 16 points -> 48 columns).
+    n_pts = df_afids.shape[1] // 3
+    df_afids_t = df_afids.transpose()
+    df_afids_mcpx = df_afids_t[0:n_pts] - mcp_x
+    df_afids_mcpy = df_afids_t[n_pts:2 * n_pts] - mcp_y
+    df_afids_mcpz = df_afids_t[2 * n_pts:3 * n_pts] - mcp_z
 
     # concat the three coords and take transpose
     frames = [df_afids_mcpx, df_afids_mcpy, df_afids_mcpz]
