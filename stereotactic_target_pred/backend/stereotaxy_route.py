@@ -41,6 +41,9 @@ def post_model_predict_json():
             file = request.files.get("file")
 
             model_type = request.form.get("model_type")
+            print("====================================")
+            print(f"RECEIVED MODEL TYPE FROM UI: {model_type}")
+            print("====================================")
             logger.info("model_type: %s", model_type)
             
         except Exception as e:
@@ -70,8 +73,10 @@ def post_model_predict_json():
         slicer_tfm = f'{OUTPUT_FOLDER}/{file_name_without_extension}_ACPC.txt'
         logger.info("slicer_tfm: %s", slicer_tfm)
 
-        template_fcsv = os.path.join(root_dir, config.get("template_fcsv"))
-        logger.info("template_fscv: %s", template_fcsv)
+        template_key = f"{model_type}_template"
+        template_path = config.get(template_key, config.get("template_fcsv"))
+        template_fcsv = os.path.join(root_dir, template_path)
+        logger.info("template_fcsv: %s", template_fcsv)
 
         midpoint = 'PMJ'
         logger.info("midpoint: %s", midpoint)
@@ -79,14 +84,14 @@ def post_model_predict_json():
         model_path = os.path.join(root_dir, config.get(model_type))
         logger.info("model_path: %s", model_path)
         
-        target_mcp = f'{OUTPUT_FOLDER}/{file_name_without_extension}_mcp.fcsv'
+        target_mcp = f'{OUTPUT_FOLDER}/{file_name_without_extension}_{model_type}_mcp.fcsv'
         logger.info("target_mcp: %s", target_mcp)
 
-        target_native = f'{OUTPUT_FOLDER}/{file_name_without_extension}_native.fcsv'
+        target_native = f'{OUTPUT_FOLDER}/{file_name_without_extension}_{model_type}_native.fcsv'
         logger.info("target_native: %s", target_native)
 
         print("------------")
-        print("starting model pred")
+        print(f"starting {model_type} model pred")
         print("------------")
 
         model_pred(
@@ -98,6 +103,7 @@ def post_model_predict_json():
             target_mcp=target_mcp,
             target_native=target_native
         )
+
         return jsonify({"message": f"Model ran"}), 200
 
     except Exception as e:

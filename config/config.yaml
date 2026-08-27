@@ -1,4 +1,9 @@
 #Stereotaxy models 
 STN: 'resources/STN.pkl'
-cZI: 'resources/STN.pkl' #change to czi model but dummy here for testing
-template_fcsv: 'resources/target_template.fcsv'
+cZI: 'resources/cZI.pkl' 
+fct: 'resources/fct.pkl'
+RN: 'resources/RN.pkl'
+cZI_template: 'resources/cZI_template.fcsv'
+STN_template: 'resources/STN_template.fcsv'
+fct_template: 'resources/fct_template.fcsv'
+RN_template: 'resources/RN_template.fcsv'
