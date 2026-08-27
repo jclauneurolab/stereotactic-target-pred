@@ -5,6 +5,8 @@
 
 // For server
 
-export const API_URL = "https://validator.afids.io";
+//export const API_URL = "https://validator.afids.io";
 
 //export const API_URL = "https://afids-stereotaxy-predict.onrender.com";
+
+export const API_URL = "https://stereotaxy.afids.io";
